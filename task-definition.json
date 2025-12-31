@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "container-0",
-      "image": "<your-account-id>.dkr.ecr.<your-region>.amazonaws.com/<your-ecr-repo-name>",
+      "image": "905702888382.dkr.ecr.us-east-1.amazonaws.com/myfolder:1767177778",
       "essential": true,
       "portMappings": [
         {
