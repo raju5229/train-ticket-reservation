@@ -4,8 +4,10 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:ecs:us-east-1:905702888382:task-definition/project-06:1",
+
+  "executionRoleArn": "arn:aws:iam::905702888382:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::905702888382:role/ecsTaskExecutionRole",
+
   "containerDefinitions": [
     {
       "name": "train-ticket-reservation",
