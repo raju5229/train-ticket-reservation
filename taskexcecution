@@ -1,0 +1,31 @@
+{
+  "family": "project-06",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<your-account-id>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<your-account-id>:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "container-0",
+      "image": "<your-account-id>.dkr.ecr.<your-region>.amazonaws.com/<your-ecr-repo-name>",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/trainbook",
+          "awslogs-region": "<your-region>",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
