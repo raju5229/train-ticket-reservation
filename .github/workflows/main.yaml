@@ -70,10 +70,10 @@ jobs:
           cp task-definition.json new-task.json
 
       # 1️⃣1️⃣ Deploy to ECS
-      - name: Deploy to Amazon ECS
+      - name: 🚀 Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
-          task-definition: new-task.json
-          service: ${{ secrets.ECS_SERVICE }}
-          cluster: ${{ secrets.ECS_CLUSTER }}
+          task-definition: task-definition.json
+          service: project-06-aws 
+          cluster: project-06
           wait-for-service-stability: true
