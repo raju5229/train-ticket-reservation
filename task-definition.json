@@ -4,11 +4,11 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::<your-account-id>:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:ecs:us-east-1:905702888382:task-definition/project-06:1",
   "taskRoleArn": "arn:aws:iam::<your-account-id>:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "container-0",
+      "name": "train-ticket-reservation",
       "image": "905702888382.dkr.ecr.us-east-1.amazonaws.com/myfolder:1767177778",
       "essential": true,
       "portMappings": [
@@ -22,7 +22,7 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/trainbook",
-          "awslogs-region": "<your-region>",
+          "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
       }
