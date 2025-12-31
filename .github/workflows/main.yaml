@@ -7,48 +7,69 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-
-      # ✅ REQUIRED: Checkout repository
+      # 1️⃣ Checkout source code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS
+      # 2️⃣ Setup Java for Maven build
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # 3️⃣ Build WAR file
+      - name: Build WAR with Maven
+        run: mvn clean package -DskipTests
+
+      # 4️⃣ Verify WAR file exists (debug-safe)
+      - name: Verify WAR file
+        run: ls -lh target/
+
+      # 5️⃣ Configure AWS credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      # 6️⃣ Login to Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      # 7️⃣ Build Docker image
       - name: Build Docker Image
         run: |
           IMAGE_TAG=$(date +%s)
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           docker build -t ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG .
 
+      # 8️⃣ Tag Docker image
       - name: Tag Docker Image
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           docker tag ${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
             $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: Push to ECR
+      # 9️⃣ Push image to ECR
+      - name: Push Docker Image to ECR
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           docker push $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
+      # 🔟 Update ECS task definition image
       - name: Update ECS Task Definition
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           sed -i "s|<IMAGE>|$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}|g" task-definition.json
           cp task-definition.json new-task.json
 
+      # 1️⃣1️⃣ Deploy to ECS
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
