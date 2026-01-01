@@ -11,7 +11,7 @@
   "containerDefinitions": [
     {
       "name": "train-ticket-reservation",
-      "image": "<IMAGE>",
+      "image": "905702888382.dkr.ecr.us-east-1.amazonaws.com/myfolder:1767291026",
       "essential": true,
 
       "portMappings": [
