@@ -1,17 +1,17 @@
 {
-  "family": "project-06",
+  "family": "project",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
 
   "cpu": "1024",
   "memory": "2048",
 
-  "executionRoleArn": "arn:aws:iam::905702888382:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::905702888382:role/ecsTaskExecutionRol   ",
 
   "containerDefinitions": [
     {
       "name": "train-ticket-reservation",
-      "image": "905702888382.dkr.ecr.us-east-1.amazonaws.com/myfolder:1767291026",
+      "image": "905702888382.dkr.ecr.us-east-1.amazonaws.com/myfolder:1767291308",
       "essential": true,
 
       "portMappings": [
